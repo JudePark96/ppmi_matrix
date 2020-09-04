@@ -31,11 +31,11 @@ def co_occurrence(sentences, window_size):
     return df
 
 
-def pmi(df, positive=True):
+def pmi(df, alpha=0.001, positive=True):
     col_totals = df.sum(axis=0)
     total = col_totals.sum()
     row_totals = df.sum(axis=1)
-    expected = np.outer(row_totals, col_totals) / total
+    expected = np.outer(row_totals, col_totals + alpha) / total
     df = df / expected
     with np.errstate(divide='ignore'):
         df = np.log(df)
@@ -47,7 +47,7 @@ def pmi(df, positive=True):
 
 if __name__ == "__main__":
     text = ["나 는 오늘 밤 에 공부 를 해요 . ", "나 는 오늘 밤 에 공부 를 하지 않아 요 ."]  
-    print(pmi(co_occurrence(text, window_size=2), positive=True))
+    print(pmi(co_occurrence(text, window_size=2)))
     
     """
            .        공부         나         는         를         밤        않아         에        오늘         요        하지        해요
