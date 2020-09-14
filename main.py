@@ -6,6 +6,7 @@ __email__ = 'judepark@kookmin.ac.kr'
 import argparse
 import pickle
 import logging
+from collections import defaultdict
 
 from coocurrence import build_co_occur_matrix
 from tqdm import tqdm
@@ -34,13 +35,13 @@ def main():
         f.close()
 
     with open(args.v2i_path, 'rb') as f:
-        vocab2idx = pickle.load(f)
+        vocab2idx = defaultdict(int, pickle.load(f))
         f.close()
 
     x = build_co_occur_matrix(corpus, vocab2idx, args.windows, dynamic_weight=True, verbose=True)
 
     with open(args.output_path, 'wb') as f:
-        pickle.dump(x, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(x, f)
         f.close()
 
     logger.info('saving co-occurrence matrix done.')

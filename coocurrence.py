@@ -37,7 +37,7 @@ def build_word_context(
         # sents (List of sentences) has already tokenized sentences.
         n = len(sent)
 
-        for i, word in enumerate(sents):
+        for i, word in enumerate(sent):
             if not (word in vocab2idx):
                 continue
 
@@ -59,14 +59,15 @@ def encode_as_matrix(word2contexts: dict, vocab2idx: dict, verbose: bool):
     rows = []
     cols = []
     data = []
-    for word, contexts in word2contexts.items():
+    for idx, (word, contexts) in enumerate(word2contexts.items()):
         word_idx = vocab2idx[word]
         for context, cooccurrence in contexts.items():
             context_idx = vocab2idx[context]
             rows.append(word_idx)
             cols.append(context_idx)
             data.append(cooccurrence)
-            print(word, context, cooccurrence)
+            if idx % 1000 == 0:
+                logger.info(f'{word} - {context} -> {cooccurrence}')
     x = csr_matrix((data, (rows, cols)))
 
     if verbose:
