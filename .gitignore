@@ -2,3 +2,4 @@
 venv
 corpus
 __pycache__
+*.pkl

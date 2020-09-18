@@ -9,6 +9,7 @@ import logging
 from collections import defaultdict
 
 from coocurrence import build_co_occur_matrix
+from pmi import pmi
 from tqdm import tqdm
 
 
@@ -39,12 +40,18 @@ def main():
         f.close()
 
     x = build_co_occur_matrix(corpus, vocab2idx, args.windows, dynamic_weight=True, verbose=True)
+    pmi_matrix, px, py = pmi(
+        x,
+        min_pmi=0,
+        alpha=1e-3,
+        beta=0.75
+    )
 
     with open(args.output_path, 'wb') as f:
-        pickle.dump(x, f)
+        pickle.dump(pmi_matrix, f)
         f.close()
 
-    logger.info('saving co-occurrence matrix done.')
+    logger.info('saving ppmi matrix done.')
 
 
 if __name__ == '__main__':
